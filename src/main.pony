@@ -27,11 +27,11 @@ actor Editor
     cursor = Cursor(buffer)
   
   be handle(input: U8 val) =>
-    match input
-      | Enter() => new_line()
-    else
-      write(input)
-    end
+    // match input
+      // | Enter() => new_line()
+    // else
+    write(input)
+    // end
 
   fun ref write(char: U8 val) =>
     buffer.writec(char, cursor.position())

@@ -3,54 +3,53 @@ use "debug"
 use "ncurses-pony"
 
 class RenderablePosition
-  let line: U32
-  let char: U32
+  let line: I32
+  let char: I32
 
   new val create(position: Position val) =>
     """
     Rendering uses different types for cursor placement.
     Also we need to change the programs 0,0 placement to 1,1 here.
     """
-    line = position.line.u32() + 1
-    char = position.char.u32() + 1
+    line = position.line.i32() + 1
+    char = position.char.i32() + 1
 
 
 class Renderer
   let out: OutStream
-  let main_window: Pointer[Window]
+  let main_window: Window
 
   new create(out': OutStream) =>
     out = out'
-    let parent = Nc.initscr()
-    main_window = Nc.newwin(60, 80, 0, 0)
-    Nc.clear()
-    Nc.wclear(main_window)
-    Nc.noecho()
-    Nc.cbreak()
-    Nc.keypad(parent, true)
-    Nc.curs_set(0)
-    Nc.clear()
-    Nc.wprintw(main_window, "welcome!")
-    Nc.wrefresh(main_window)
+    let parent = Curses.initscr()
+    parent.keypad(true)
+    main_window = Curses.newwin()
+    Curses.clear()
+    main_window.clear()
+    Curses.noecho()
+    Curses.cbreak()
+    Curses.clear()
+    main_window.printw("welcome!")
+    main_window.refresh()
 
   fun ref close() =>
-    Nc.delwin(main_window)
-    Nc.endwin()
+    main_window.dispose()
+    Curses.endwin()
 
   fun ref render(buffer: Buffer) =>
     clear()
     for line in buffer.lines.values() do
-      Nc.wprintw(main_window, line)
+      main_window.printw(line)
     end
-    Nc.wrefresh(main_window)
+    main_window.refresh()
 
   fun ref clear() =>
-    Nc.wclear(main_window)
+    main_window.clear()
 
-  fun cursor(position: Position val) =>
-    Debug.out("")
-    // let rend_position = RenderablePosition(position)
-    // out.write(ANSI.cursor(rend_position.char, rend_position.line))
+  fun ref cursor(position: Position val) =>
+    let rend_position = RenderablePosition(position)
+    main_window.move(rend_position.line, rend_position.char)
+    main_window.refresh()
 
 
 
