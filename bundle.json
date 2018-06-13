@@ -1,0 +1,9 @@
+{
+  "deps": [
+    { "type": "github",
+      "repo": "jtfmumm/ncurses-pony",
+      "subdir": "src/",
+      "tag": "0.0.8"
+    }
+  ]
+}
