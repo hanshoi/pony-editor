@@ -9,8 +9,7 @@ build-debug:
 	stable env ponyc src/ -b $(BINNAME) -d
 
 
-run:
-	build
+run: build
 	./ponitor
 
 clean:

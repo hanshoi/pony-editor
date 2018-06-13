@@ -1,5 +1,6 @@
 use "term"
 use "debug"
+use "ncurses-pony"
 
 class RenderablePosition
   let line: U32
@@ -19,6 +20,7 @@ class Renderer
 
   new create(out': OutStream) =>
     out = out'
+    Nc.initscr()
     clear()
 
   fun render(buffer: Buffer) =>
