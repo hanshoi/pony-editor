@@ -33,6 +33,7 @@ class Renderer
     Nc.wprintw(main_window, "wwelcome!")
     Nc.printw("welcome!")
     Nc.refresh()
+    Nc.wrefresh(main_window)
 
   fun ref close() =>
     Nc.delwin(main_window)
