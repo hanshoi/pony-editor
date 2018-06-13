@@ -1,9 +1,9 @@
 {
   "deps": [
     { "type": "github",
-      "repo": "jtfmumm/ncurses-pony",
+      "repo": "hanshoi/ncurses-pony",
       "subdir": "src/",
-      "tag": "0.0.8"
+      "tag": "0.0.9"
     }
   ]
 }
