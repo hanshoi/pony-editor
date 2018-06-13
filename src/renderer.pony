@@ -22,7 +22,7 @@ class Renderer
   new create(out': OutStream) =>
     out = out'
     let parent = Nc.initscr()
-    main_window = Nc.newwin(60, 80, 26, 2)
+    main_window = Nc.newwin(60, 80, 0, 0)
     Nc.clear()
     Nc.wclear(main_window)
     Nc.noecho()
@@ -30,9 +30,7 @@ class Renderer
     Nc.keypad(parent, true)
     Nc.curs_set(0)
     Nc.clear()
-    Nc.wprintw(main_window, "wwelcome!")
-    Nc.printw("welcome!")
-    Nc.refresh()
+    Nc.wprintw(main_window, "welcome!")
     Nc.wrefresh(main_window)
 
   fun ref close() =>
@@ -42,9 +40,9 @@ class Renderer
   fun ref render(buffer: Buffer) =>
     clear()
     for line in buffer.lines.values() do
-      Nc.printw(line)
+      Nc.wprintw(main_window, line)
     end
-    Nc.refresh()
+    Nc.wrefresh(main_window)
 
   fun ref clear() =>
     Nc.wclear(main_window)
