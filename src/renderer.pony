@@ -2,17 +2,15 @@ use "term"
 use "debug"
 use "ncurses-pony"
 
-class RenderablePosition
-  let line: I32
-  let char: I32
+actor Debugger
+  let window: Window
+  
+  new create() =>
+    window = Curses.newwin(60, 60, 0, 81)
 
-  new val create(position: Position val) =>
-    """
-    Rendering uses different types for cursor placement.
-    Also we need to change the programs 0,0 placement to 1,1 here.
-    """
-    line = position.line.i32() + 1
-    char = position.char.i32() + 1
+  be apply(str: String) =>
+    window.printw(str)
+    window.refresh()
 
 
 class Renderer
@@ -31,15 +29,16 @@ class Renderer
     Curses.clear()
     main_window.printw("welcome!")
     main_window.refresh()
+    Debugger("debug")
 
   fun ref close() =>
-    main_window.dispose()
+    main_window.delwin()
     Curses.endwin()
 
   fun ref render(buffer: Buffer) =>
     clear()
-    for line in buffer.lines.values() do
-      main_window.printw(line)
+    for (index, line) in buffer.lines.pairs() do
+      main_window.mvprintw(index.i32(), 0, line)
     end
     main_window.refresh()
 
@@ -47,8 +46,7 @@ class Renderer
     main_window.clear()
 
   fun ref cursor(position: Position val) =>
-    let rend_position = RenderablePosition(position)
-    main_window.move(rend_position.line, rend_position.char)
+    main_window.move(position.line.i32(), position.char.i32())
     main_window.refresh()
 
 
