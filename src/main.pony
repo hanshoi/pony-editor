@@ -11,10 +11,11 @@ actor Main
       fun ref apply(data: Array[U8] iso) => term(consume data)
       fun ref dispose() =>
         term.dispose()
+        editor.dispose()
     end
 
     env.input(consume notify)
-    
+
 
 actor Editor
   var buffer: Buffer
@@ -22,10 +23,13 @@ actor Editor
   let renderer: Renderer
 
   new create(env: Env) =>
-    renderer = Renderer(env.out)
+    renderer = Renderer.create()
     buffer = Buffer()
     cursor = Cursor(buffer)
-  
+
+  be dispose() =>
+    renderer.close()
+
   be handle(input: U8 val) =>
     match input
       | Enter() => new_line()
@@ -43,7 +47,7 @@ actor Editor
     buffer.new_line(cursor.position().line)
     cursor.down()
     renderer.cursor(cursor.position())
-    
+
   be left() =>
     cursor.left()
     renderer.cursor(cursor.position())
@@ -59,7 +63,7 @@ actor Editor
   be up() =>
     cursor.up()
     renderer.cursor(cursor.position())
-    
+
 
 class InputNotifier is ANSINotify
   let _editor: Editor
@@ -72,10 +76,10 @@ class InputNotifier is ANSINotify
 
   fun ref up(ctrl: Bool, alt: Bool, shift: Bool) =>
     _editor.up()
-    
+
   fun ref down(ctrl: Bool, alt: Bool, shift: Bool) =>
     _editor.down()
-    
+
   fun ref left(ctrl: Bool, alt: Bool, shift: Bool) =>
     _editor.left()
 
