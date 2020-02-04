@@ -1,6 +1,8 @@
 # pony-editor
 Small text editor done with ponylang
 
+WIP: not working
+
 ## compile
 ```bash
 ponyc
